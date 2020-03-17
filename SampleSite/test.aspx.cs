@@ -15,7 +15,7 @@ namespace SampleSite
 
         protected void Page_Load(object sender, EventArgs e)
         {
-            add.CookieContainer = cookieContainer;
+            add.CookieContainer = new System.Net.CookieContainer();
             login.CookieContainer = cookieContainer;
         }
 
@@ -43,7 +43,7 @@ namespace SampleSite
         {
             try
             {
-                int a = add.add(int.Parse(this.TextBox1.Text), int.Parse(this.TextBox1.Text));
+                int a = add.add(int.Parse(this.TextBox1.Text), int.Parse(this.TextBox2.Text));
                 this.Label1.Text = a.ToString();
             }
             catch(Exception ex)
