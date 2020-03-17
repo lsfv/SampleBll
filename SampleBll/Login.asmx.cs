@@ -1,5 +1,6 @@
 ﻿using System;
 using System.Collections.Generic;
+using System.Diagnostics;
 using System.Linq;
 using System.Web;
 using System.Web.Security;
@@ -18,22 +19,29 @@ namespace SampleBll
     public class Login : System.Web.Services.WebService
     {
         [WebMethod(EnableSession = true)]
-        public bool LoginCheck(string uid, string password)
+        public void LoginCheck(string uid, string password)
         {
             bool res = false;
-            string hashuid = "admin";// System.Web.Security.FormsAuthentication.HashPasswordForStoringInConfigFile("admin", "MD5");
-            string hashpassword = "123";// System.Web.Security.FormsAuthentication.HashPasswordForStoringInConfigFile("123", "MD5");
-            if (uid == hashuid && password == hashpassword)
+            string hashuid = "admin"; // System.Web.Security.FormsAuthentication.HashPasswordForStoringInConfigFile("admin", "MD5");
+            string hashpassword = "123"; System.Web.Security.FormsAuthentication.HashPasswordForStoringInConfigFile("123", "MD5");
+            if (uid.ToLower() == hashuid.ToLower() && password.ToLower() == hashpassword.ToLower())
             {
                 if (Session != null)
                 {
-                    Session.Clear();
+                    Context.Response.Cookies.Add(new HttpCookie("ASP.NET_SessionId", ""));
                 }
 
                 Session[WebServicesGateway.SESSION_LOGINID] = uid;
-                res = true;
+
+
+                string sessionID = this.Context.Session.SessionID;
+                this.Context.Response.Write("<message>success</message>");
+                this.Context.Response.Write("<sessionid>" + sessionID + "</sessionid>");
             }
-            return res;
+            else
+            {
+                this.Context.Response.Write("<message>fail!</message>"+hashuid + "...." + hashpassword);
+            }
         }
     }
 }
